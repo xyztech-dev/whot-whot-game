@@ -3,21 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XyzTech - Authentic Whot!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <title>XyzTech - Cyber Arcade Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #12141a;
             --surface: #1c202b;
+            --surface-card: #252a38;
             --primary: #00f0ff;
             --accent: #ff007f;
             --warning: #ffb703;
+            --success: #00ff66;
             --text-main: #f0f4f8;
             --text-muted: #8a9bb8;
             
-            /* Physical Whot Card Colors */
+            /* Whot Physical Card Colors */
             --whot-red: #9e1b2f;
             --card-bg: #fdfdfd;
+
+            /* Ludo Colors */
+            --ludo-red: #ff3366;
+            --ludo-green: #00cc66;
+            --ludo-yellow: #ffcc00;
+            --ludo-blue: #3399ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; user-select: none; }
@@ -38,122 +46,79 @@
             padding: 10px 15px; background: var(--surface); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px;
         }
         .brand { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-        .header-controls { display: flex; gap: 10px; align-items: center; }
+        .header-controls { display: flex; gap: 8px; align-items: center; }
         .status-badge { font-size: 0.85rem; color: var(--warning); font-weight: 700; background: rgba(255, 183, 3, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--warning); }
-        .about-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
-        
+        .nav-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
+
+        /* LOBBY STYLES */
+        #game-lobby {
+            width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center;
+            gap: 20px; padding: 30px 15px; margin: auto; text-align: center;
+        }
+        .lobby-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--primary); font-weight: 900; }
+        .lobby-subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 10px; }
+        .game-cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; width: 100%; }
+        .game-selection-card {
+            background: var(--surface); border: 2px solid rgba(0, 240, 255, 0.3); border-radius: 16px;
+            padding: 20px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .game-selection-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); }
+        .game-icon { font-size: 3rem; }
+        .game-card-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--text-main); font-weight: 800; }
+        .game-card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.3; }
+
+        /* WHOT GAME STYLES */
+        #whot-section { width: 100%; max-width: 800px; display: none; flex-direction: column; align-items: center; }
         .timer-bar-container { width: 100%; max-width: 800px; background: rgba(255,255,255,0.05); height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; }
         .timer-bar { height: 100%; background: var(--primary); width: 100%; transition: width 1s linear, background-color 0.3s ease; }
-
         .game-arena { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 12px; align-items: center; margin: 8px 0; }
         .bot-area, .player-area { width: 100%; background: var(--surface); padding: 12px; border-radius: 12px; border: 1px solid rgba(0, 240, 255, 0.2); display: flex; flex-direction: column; gap: 8px; }
         
-        /* AUTHENTIC WHOT CARD STYLES */
         .card {
-            width: 80px;
-            height: 120px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 6px;
-            cursor: pointer;
-            position: relative;
-            color: var(--whot-red);
-            border: 1px solid #dcdcdc;
-            flex-shrink: 0;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            width: 80px; height: 120px; background: var(--card-bg); border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column;
+            justify-content: space-between; padding: 6px; cursor: pointer; position: relative;
+            color: var(--whot-red); border: 1px solid #dcdcdc; flex-shrink: 0; transition: transform 0.15s ease;
         }
-
-        .card.playable {
-            box-shadow: 0 0 12px #00ff66, 0 3px 8px rgba(0, 0, 0, 0.4);
-            border: 2px solid #00ff66;
-            transform: translateY(-4px);
-        }
-
-        .card-corner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            line-height: 1;
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-
-        .card-corner.bottom {
-            transform: rotate(180deg);
-        }
-
-        .corner-symbol {
-            font-size: 0.75rem;
-            margin-top: 2px;
-        }
-
-        .card-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            font-size: 2.2rem;
-            font-weight: bold;
-        }
-
-        /* SVG Shape Styles matching Physical Card */
+        .card.playable { box-shadow: 0 0 12px #00ff66, 0 3px 8px rgba(0, 0, 0, 0.4); border: 2px solid #00ff66; transform: translateY(-4px); }
+        .card-corner { display: flex; flex-direction: column; align-items: center; line-height: 1; font-weight: 800; font-size: 1.1rem; }
+        .card-corner.bottom { transform: rotate(180deg); }
+        .corner-symbol { font-size: 0.75rem; margin-top: 2px; }
+        .card-center { display: flex; align-items: center; justify-content: center; flex-grow: 1; font-size: 2.2rem; font-weight: bold; }
         .shape-svg { fill: var(--whot-red); width: 36px; height: 36px; }
         .shape-svg-small { fill: var(--whot-red); width: 12px; height: 12px; }
-
-        .whot-text-logo {
-            font-family: 'serif';
-            font-style: italic;
-            font-weight: 900;
-            font-size: 1.1rem;
-            text-align: center;
-            line-height: 1;
-        }
-
-        .card-back {
-            width: 50px;
-            height: 75px;
-            background: var(--whot-red);
-            border: 2px solid #ffffff;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-family: serif;
-            font-style: italic;
-            font-weight: bold;
-            font-size: 0.75rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
+        .whot-text-logo { font-family: serif; font-style: italic; font-weight: 900; font-size: 1.1rem; text-align: center; }
+        .card-back { width: 50px; height: 75px; background: var(--whot-red); border: 2px solid #ffffff; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #ffffff; font-family: serif; font-style: italic; font-weight: bold; font-size: 0.75rem; }
         .field { display: flex; gap: 35px; align-items: center; justify-content: center; width: 100%; padding: 8px 0; }
-        
-        .deck-btn {
-            width: 80px;
-            height: 120px;
-            background: var(--whot-red);
-            border: 2px solid #ffffff;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-family: serif;
-            font-style: italic;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
+        .deck-btn { width: 80px; height: 120px; background: var(--whot-red); border: 2px solid #ffffff; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; font-family: serif; font-style: italic; font-weight: bold; }
         .log-box { width: 100%; max-width: 800px; background: rgba(18, 24, 41, 0.8); border-radius: 8px; padding: 8px 12px; font-size: 0.9rem; color: var(--text-muted); text-align: center; }
         .player-hand { display: flex; gap: 8px; overflow-x: auto; padding: 8px 4px; width: 100%; }
 
-        .modal, .game-over-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.9); display: none; align-items: center; justify-content: center; z-index: 100; flex-direction: column; }
+        /* LUDO STYLES */
+        #ludo-section { width: 100%; max-width: 500px; display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 10px; }
+        .ludo-board { width: 100%; aspect-ratio: 1/1; background: #ffffff; border-radius: 12px; display: grid; grid-template-columns: repeat(15, 1fr); grid-template-rows: repeat(15, 1fr); border: 4px solid var(--surface); box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; }
+        .ludo-box { border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; position: relative; font-size: 0.6rem; font-weight: bold; }
+        .base-red { grid-column: 1 / 7; grid-row: 1 / 7; background: var(--ludo-red); padding: 12px; }
+        .base-green { grid-column: 10 / 16; grid-row: 1 / 7; background: var(--ludo-green); padding: 12px; }
+        .base-yellow { grid-column: 10 / 16; grid-row: 10 / 16; background: var(--ludo-yellow); padding: 12px; }
+        .base-blue { grid-column: 1 / 7; grid-row: 10 / 16; background: var(--ludo-blue); padding: 12px; }
+        .base-inner { width: 100%; height: 100%; background: #ffffff; border-radius: 8px; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; padding: 10px; }
+        .home-center { grid-column: 7 / 10; grid-row: 7 / 10; background: #333; display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Orbitron'; font-size: 0.8rem; }
+        
+        .ludo-token { width: 75%; height: 75%; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.2s; }
+        .ludo-token.red { background: var(--ludo-red); }
+        .ludo-token.green { background: var(--ludo-green); }
+        .ludo-token.yellow { background: var(--ludo-yellow); }
+        .ludo-token.blue { background: var(--ludo-blue); }
+        .ludo-token.movable { animation: pulse 0.8s infinite alternate; }
+
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.25); box-shadow: 0 0 10px var(--primary); } }
+
+        .dice-container { display: flex; align-items: center; gap: 20px; background: var(--surface); padding: 12px 25px; border-radius: 12px; border: 1px solid rgba(0,240,255,0.2); }
+        .dice { width: 50px; height: 50px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; color: #000; box-shadow: 0 4px 8px rgba(0,0,0,0.3); cursor: pointer; }
+
+        /* MODALS */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.9); display: none; align-items: center; justify-content: center; z-index: 100; flex-direction: column; }
         .modal-content { background: var(--surface); border: 2px solid var(--primary); border-radius: 16px; padding: 25px; text-align: center; width: 90%; max-width: 350px; }
         .suit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
         .suit-select-btn { background: var(--card-bg); color: var(--whot-red); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -162,43 +127,85 @@
 </head>
 <body>
     <header>
-        <div class="brand">XYZTECH // WHOT!</div>
+        <div class="brand">XYZTECH // ARCADE</div>
         <div class="header-controls">
-            <button class="about-btn" onclick="document.getElementById('about-modal').style.display='flex'">ABOUT</button>
-            <div class="status-badge" id="turn-badge">YOUR TURN (15s)</div>
+            <button class="nav-btn" onclick="showLobby()">GAME MENU</button>
+            <button class="nav-btn" onclick="document.getElementById('about-modal').style.display='flex'">ABOUT</button>
+            <div class="status-badge" id="turn-badge">CHOOSE GAME</div>
         </div>
     </header>
 
-    <div class="timer-bar-container">
-        <div class="timer-bar" id="timer-bar"></div>
+    <!-- GAME LOBBY -->
+    <div id="game-lobby">
+        <div class="lobby-title">SELECT A GAME</div>
+        <div class="lobby-subtitle">Choose your favorite board or card experience</div>
+        <div class="game-cards-container">
+            <div class="game-selection-card" onclick="startWhotGame()">
+                <div class="game-icon">🃏</div>
+                <div class="game-card-title">WHOT! ARCADE</div>
+                <div class="game-card-desc">Authentic Nigerian Whot card game vs Smart Bot with full action card rules.</div>
+            </div>
+            <div class="game-selection-card" onclick="startLudoGame()">
+                <div class="game-icon">🎲</div>
+                <div class="game-card-title">CYBER LUDO</div>
+                <div class="game-card-desc">Classic 4-player board game with dice rolls, base exits, and race to home.</div>
+            </div>
+        </div>
     </div>
 
-    <div class="game-arena">
-        <div class="bot-area">
-            <div style="font-family:'Orbitron'; color:var(--accent); font-size:0.9rem;">🤖 CYBER_BOT <span id="bot-count">(6)</span></div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;" id="bot-hand-display"></div>
+    <!-- WHOT GAME SECTION -->
+    <div id="whot-section">
+        <div class="timer-bar-container">
+            <div class="timer-bar" id="timer-bar"></div>
         </div>
 
-        <div class="field">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                <span style="font-size:0.8rem; color:var(--text-muted);">MARKET</span>
-                <div class="deck-btn" onclick="playerDrawCard()">
-                    <div style="font-size:1.1rem;">Whot!</div>
-                    <div id="deck-count" style="font-size:0.85rem; margin-top:4px; font-family:'Orbitron';">30</div>
+        <div class="game-arena">
+            <div class="bot-area">
+                <div style="font-family:'Orbitron'; color:var(--accent); font-size:0.9rem;">🤖 CYBER_BOT <span id="bot-count">(6)</span></div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;" id="bot-hand-display"></div>
+            </div>
+
+            <div class="field">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                    <span style="font-size:0.8rem; color:var(--text-muted);">MARKET</span>
+                    <div class="deck-btn" onclick="playerDrawCard()">
+                        <div style="font-size:1.1rem;">Whot!</div>
+                        <div id="deck-count" style="font-size:0.85rem; margin-top:4px; font-family:'Orbitron';">30</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                    <span style="font-size:0.8rem; color:var(--text-muted);">PLAYED CARD</span>
+                    <div id="top-card-display"></div>
                 </div>
             </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                <span style="font-size:0.8rem; color:var(--text-muted);">PLAYED CARD</span>
-                <div id="top-card-display"></div>
-            </div>
+
+            <div class="log-box" id="whot-log-text">Match top card by shape or number!</div>
         </div>
 
-        <div class="log-box" id="log-text">Match top card by suit shape or number!</div>
+        <div class="player-area">
+            <div style="font-family:'Orbitron'; color:var(--primary); font-size:0.9rem;">👤 YOUR HAND</div>
+            <div class="player-hand" id="player-hand"></div>
+        </div>
     </div>
 
-    <div class="player-area">
-        <div style="font-family:'Orbitron'; color:var(--primary); font-size:0.9rem;">👤 YOUR HAND</div>
-        <div class="player-hand" id="player-hand"></div>
+    <!-- LUDO GAME SECTION -->
+    <div id="ludo-section">
+        <div class="dice-container">
+            <div style="font-family:'Orbitron'; font-size:0.9rem; color:var(--primary);" id="ludo-turn-indicator">RED'S TURN</div>
+            <div class="dice" id="ludo-dice" onclick="rollLudoDice()">🎲</div>
+            <button class="nav-btn" onclick="rollLudoDice()">ROLL DICE</button>
+        </div>
+
+        <div class="ludo-board" id="ludo-board">
+            <!-- Bases -->
+            <div class="base-red"><div class="base-inner" id="base-red"></div></div>
+            <div class="base-green"><div class="base-inner" id="base-green"></div></div>
+            <div class="base-yellow"><div class="base-inner" id="base-yellow"></div></div>
+            <div class="base-blue"><div class="base-inner" id="base-blue"></div></div>
+            <div class="home-center">HOME</div>
+        </div>
+
+        <div class="log-box" id="ludo-log-text">Roll a 6 to move your piece out of base!</div>
     </div>
 
     <!-- WHOT CALL MODAL -->
@@ -218,9 +225,9 @@
     <!-- ABOUT MODAL -->
     <div class="modal" id="about-modal" onclick="this.style.display='none'">
         <div class="modal-content" onclick="event.stopPropagation()" style="text-align:left; max-width:320px;">
-            <h3 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:8px; font-size:1rem;">ABOUT GAME</h3>
+            <h3 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:8px; font-size:1rem;">ABOUT ARCADE</h3>
             <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.4; margin-bottom:10px;">
-                Whot! Cyber Arcade is a neon-styled Nigerian Whot card game vs a smart bot. Features full action cards (1,2,5,8,14,20), reshuffling deck, and zero-download browser play.
+                Whot! & Ludo Cyber Arcade features classic Nigerian Whot card mechanics and interactive 4-player Ludo straight in your web browser.
             </p>
             <p style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-bottom:12px;">
                 Dev: XyzTech
@@ -234,12 +241,38 @@
         <div class="modal-content">
             <h2 id="game-over-title" style="font-family:'Orbitron'; font-size:2rem; margin-bottom:10px;">VICTORY</h2>
             <p id="game-over-msg" style="color:var(--text-muted);">Game Over</p>
-            <button class="restart-btn" onclick="initGame()">PLAY AGAIN</button>
+            <button class="restart-btn" onclick="showLobby()">MAIN MENU</button>
         </div>
     </div>
 
     <script>
-        // SVG Vector Icons for Physical Card Look
+        // NAVIGATION ENGINE
+        function showLobby() {
+            clearInterval(turnTimer);
+            document.getElementById('game-lobby').style.display = 'flex';
+            document.getElementById('whot-section').style.display = 'none';
+            document.getElementById('ludo-section').style.display = 'none';
+            document.getElementById('game-over-modal').style.display = 'none';
+            document.getElementById('turn-badge').innerText = "CHOOSE GAME";
+        }
+
+        function startWhotGame() {
+            document.getElementById('game-lobby').style.display = 'none';
+            document.getElementById('whot-section').style.display = 'flex';
+            document.getElementById('ludo-section').style.display = 'none';
+            initWhotGame();
+        }
+
+        function startLudoGame() {
+            document.getElementById('game-lobby').style.display = 'none';
+            document.getElementById('whot-section').style.display = 'none';
+            document.getElementById('ludo-section').style.display = 'flex';
+            initLudoGame();
+        }
+
+        // ==========================================
+        // WHOT GAME ENGINE
+        // ==========================================
         const SVG_SHAPES = {
             Circle: `<svg class="shape-svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/></svg>`,
             Triangle: `<svg class="shape-svg" viewBox="0 0 100 100"><polygon points="50,5 95,90 5,90"/></svg>`,
@@ -271,13 +304,13 @@
             return d.sort(() => Math.random() - 0.5);
         }
 
-        function initGame() {
+        function initWhotGame() {
             deck = createDeck(); discardPile = []; playerHand = []; botHand = []; activeSuit = null; isPlayerTurn = true;
             document.getElementById('game-over-modal').style.display = 'none';
             for (let i = 0; i < 6; i++) { playerHand.push(deck.pop()); botHand.push(deck.pop()); }
             do { topCard = deck.pop(); } while (topCard.suit === 'Whot' || [1,2,5,8,14].includes(topCard.number));
-            updateUI();
-            log("Match cards by shape or number!");
+            updateWhotUI();
+            logWhot("Match cards by shape or number!");
             startTimer();
         }
 
@@ -306,10 +339,10 @@
 
         function handleTimeout() {
             if (isPlayerTurn) {
-                log("Time expired! Card auto-drawn.");
+                logWhot("Time expired! Card auto-drawn.");
                 playerDrawCard(true);
             } else {
-                log("Bot turn timed out!");
+                logWhot("Bot turn timed out!");
                 botDrawCard(true);
             }
         }
@@ -334,7 +367,7 @@
             `;
         }
 
-        function updateUI() {
+        function updateWhotUI() {
             document.getElementById('deck-count').innerText = deck.length;
             document.getElementById('bot-count').innerText = `(${botHand.length})`;
 
@@ -357,13 +390,13 @@
             });
         }
 
-        function log(msg) { document.getElementById('log-text').innerText = msg; }
+        function logWhot(msg) { document.getElementById('whot-log-text').innerText = msg; }
 
         function playCard(idx) {
             if (!isPlayerTurn) return;
             let c = playerHand[idx];
             let playable = c.suit === 'Whot' || (activeSuit ? c.suit === activeSuit : (c.suit === topCard.suit || c.number === topCard.number));
-            if (!playable) { log("Invalid card play!"); return; }
+            if (!playable) { logWhot("Invalid card play!"); return; }
 
             if (c.suit === 'Whot') {
                 pendingWhotIndex = idx;
@@ -385,44 +418,26 @@
             discardPile.push(topCard);
             topCard = c;
             if (!isWhot) activeSuit = null;
-            log(`${agent} played ${c.suit} ${c.number}`);
-            updateUI();
+            logWhot(`${agent} played ${c.suit} ${c.number}`);
+            updateWhotUI();
 
             if (playerHand.length === 0) return gameOver(true);
             if (botHand.length === 0) return gameOver(false);
 
-            // Real Whot Action Rules
             let repeatTurn = false;
             let targetHand = agent === "Player" ? botHand : playerHand;
             let targetName = agent === "Player" ? "Bot" : "Player";
 
-            if (c.number === 1) {
-                log(`${agent} played Hold On (1)! Go again.`);
-                repeatTurn = true;
-            } else if (c.number === 2) {
-                log(`${agent} played Pick 2! ${targetName} draws 2 cards.`);
-                drawMultipleCards(targetHand, 2);
-                repeatTurn = true;
-            } else if (c.number === 5) {
-                log(`${agent} played Pick 3! ${targetName} draws 3 cards.`);
-                drawMultipleCards(targetHand, 3);
-                repeatTurn = true;
-            } else if (c.number === 8) {
-                log(`${agent} played Suspension (8)! ${targetName}'s turn skipped.`);
-                repeatTurn = true;
-            } else if (c.number === 14) {
-                log(`${agent} called General Market (14)! ${targetName} draws 1 card.`);
-                drawMultipleCards(targetHand, 1);
-                repeatTurn = true;
-            }
+            if (c.number === 1) { logWhot(`${agent} played Hold On (1)! Go again.`); repeatTurn = true; }
+            else if (c.number === 2) { logWhot(`${agent} played Pick 2! ${targetName} draws 2.`); drawMultipleCards(targetHand, 2); repeatTurn = true; }
+            else if (c.number === 5) { logWhot(`${agent} played Pick 3! ${targetName} draws 3.`); drawMultipleCards(targetHand, 3); repeatTurn = true; }
+            else if (c.number === 8) { logWhot(`${agent} played Suspension (8)! ${targetName} skipped.`); repeatTurn = true; }
+            else if (c.number === 14) { logWhot(`${agent} called General Market (14)! ${targetName} draws 1.`); drawMultipleCards(targetHand, 1); repeatTurn = true; }
 
-            if (!repeatTurn) {
-                isPlayerTurn = !isPlayerTurn;
-            }
+            if (!repeatTurn) isPlayerTurn = !isPlayerTurn;
 
-            updateUI();
+            updateWhotUI();
             startTimer();
-
             if (!isPlayerTurn) setTimeout(botTurn, 1000);
         }
 
@@ -438,9 +453,9 @@
             if (deck.length === 0) refillDeck();
             if (deck.length > 0) {
                 playerHand.push(deck.pop());
-                if (!isTimeout) log("You drew a card from Market.");
+                if (!isTimeout) logWhot("You drew a card from Market.");
                 isPlayerTurn = false;
-                updateUI();
+                updateWhotUI();
                 startTimer();
                 setTimeout(botTurn, 1000);
             }
@@ -449,9 +464,9 @@
         function botDrawCard(isTimeout = false) {
             if (deck.length === 0) refillDeck();
             if (deck.length > 0) botHand.push(deck.pop());
-            if (!isTimeout) log("Bot drew a card.");
+            if (!isTimeout) logWhot("Bot drew a card.");
             isPlayerTurn = true;
-            updateUI();
+            updateWhotUI();
             startTimer();
         }
 
@@ -478,7 +493,7 @@
             if (discardPile.length > 0) {
                 deck = discardPile.sort(() => Math.random() - 0.5);
                 discardPile = [];
-                log("Reshuffled market deck!");
+                logWhot("Reshuffled market deck!");
             }
         }
 
@@ -491,7 +506,115 @@
             m.style.display = 'flex';
         }
 
-        window.onload = initGame;
+        // ==========================================
+        // CYBER LUDO ENGINE
+        // ==========================================
+        let ludoPlayers = ['red', 'green', 'yellow', 'blue'];
+        let currentLudoTurn = 0; // 0: red (player), 1: green, 2: yellow, 3: blue
+        let lastDiceRoll = 0;
+        let ludoTokens = {
+            red: [-1, -1, -1, -1],
+            green: [-1, -1, -1, -1],
+            yellow: [-1, -1, -1, -1],
+            blue: [-1, -1, -1, -1]
+        };
+        let ludoRolled = false;
+
+        function initLudoGame() {
+            currentLudoTurn = 0;
+            ludoRolled = false;
+            lastDiceRoll = 0;
+            ludoTokens = { red: [-1,-1,-1,-1], green: [-1,-1,-1,-1], yellow: [-1,-1,-1,-1], blue: [-1,-1,-1,-1] };
+            renderLudoBases();
+            document.getElementById('ludo-turn-indicator').innerText = "YOUR TURN (RED)";
+            document.getElementById('turn-badge').innerText = "LUDO: RED";
+            document.getElementById('ludo-dice').innerText = "🎲";
+            logLudo("Roll a 6 to move out of base!");
+        }
+
+        function renderLudoBases() {
+            ludoPlayers.forEach(color => {
+                let baseContainer = document.getElementById(`base-${color}`);
+                baseContainer.innerHTML = '';
+                ludoTokens[color].forEach((pos, idx) => {
+                    if (pos === -1) {
+                        let tok = document.createElement('div');
+                        tok.className = `ludo-token ${color}`;
+                        tok.onclick = () => handleLudoTokenClick(color, idx);
+                        baseContainer.appendChild(tok);
+                    }
+                });
+            });
+        }
+
+        function rollLudoDice() {
+            if (ludoRolled) return;
+            lastDiceRoll = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('ludo-dice').innerText = lastDiceRoll;
+            ludoRolled = true;
+            logLudo(`${ludoPlayers[currentLudoTurn].toUpperCase()} rolled a ${lastDiceRoll}!`);
+
+            if (currentLudoTurn === 0) {
+                // Check if user has valid move
+                let hasBaseToken = ludoTokens.red.includes(-1);
+                if (lastDiceRoll === 6 && hasBaseToken) {
+                    logLudo("Tap your token in base to move out!");
+                } else if (!ludoTokens.red.some(pos => pos >= 0)) {
+                    logLudo("Need a 6 to exit base! Passing turn...");
+                    setTimeout(nextLudoTurn, 1200);
+                }
+            } else {
+                // Auto Bot Turn
+                setTimeout(botLudoMove, 1000);
+            }
+        }
+
+        function handleLudoTokenClick(color, tokenIdx) {
+            if (currentLudoTurn !== 0 || color !== 'red' || !ludoRolled) return;
+
+            let currentPos = ludoTokens.red[tokenIdx];
+            if (currentPos === -1 && lastDiceRoll === 6) {
+                ludoTokens.red[tokenIdx] = 0; // Exit base onto track
+                logLudo("Red token released onto track!");
+                renderLudoBases();
+                ludoRolled = false;
+                if (lastDiceRoll !== 6) nextLudoTurn();
+                else logLudo("Rolled 6! Roll again.");
+            }
+        }
+
+        function botLudoMove() {
+            let color = ludoPlayers[currentLudoTurn];
+            let tokens = ludoTokens[color];
+            let baseIdx = tokens.indexOf(-1);
+
+            if (lastDiceRoll === 6 && baseIdx !== -1) {
+                tokens[baseIdx] = 0;
+                logLudo(`${color.toUpperCase()} moved token out of base!`);
+                renderLudoBases();
+            } else {
+                logLudo(`${color.toUpperCase()} has no valid moves.`);
+            }
+
+            ludoRolled = false;
+            nextLudoTurn();
+        }
+
+        function nextLudoTurn() {
+            ludoRolled = false;
+            currentLudoTurn = (currentLudoTurn + 1) % 4;
+            let pColor = ludoPlayers[currentLudoTurn].toUpperCase();
+            document.getElementById('ludo-turn-indicator').innerText = `${pColor}'S TURN`;
+            document.getElementById('turn-badge').innerText = `LUDO: ${pColor}`;
+
+            if (currentLudoTurn !== 0) {
+                setTimeout(rollLudoDice, 1000);
+            }
+        }
+
+        function logLudo(msg) { document.getElementById('ludo-log-text').innerText = msg; }
+
+        window.onload = showLobby;
     </script>
 </body>
 </html>
