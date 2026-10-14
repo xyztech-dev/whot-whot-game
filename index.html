@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XyzTech - Whot! Cyber Arcade</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <title>XyzTech - Authentic Whot!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #090c15;
-            --surface: #121829;
-            --surface-card: #1e2640;
+            --bg-dark: #12141a;
+            --surface: #1c202b;
             --primary: #00f0ff;
             --accent: #ff007f;
-            --success: #00ff66;
             --warning: #ffb703;
             --text-main: #f0f4f8;
             --text-muted: #8a9bb8;
+            
+            /* Physical Whot Card Colors */
+            --whot-red: #9e1b2f;
+            --card-bg: #fdfdfd;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; user-select: none; }
+        
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
@@ -26,38 +30,148 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 15px;
+            padding: 12px;
         }
+
         header {
             width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center;
             padding: 10px 15px; background: var(--surface); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 12px;
         }
         .brand { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-        .status-badge { font-size: 0.95rem; color: var(--warning); font-weight: 700; background: rgba(255, 183, 3, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--warning); }
-        .game-arena { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 15px; align-items: center; margin: 10px 0; }
-        .bot-area, .player-area { width: 100%; background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid rgba(0, 240, 255, 0.2); display: flex; flex-direction: column; gap: 8px; }
-        .card-back { width: 45px; height: 65px; background: #2a0845; border: 1px solid var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #fff; }
-        .field { display: flex; gap: 40px; align-items: center; justify-content: center; width: 100%; padding: 10px 0; }
-        .deck-btn { width: 80px; height: 115px; background: #203a43; border: 2px solid var(--primary); border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--primary); font-family: 'Orbitron', sans-serif; }
-        .card { width: 80px; height: 115px; background: var(--surface-card); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; padding: 8px; cursor: pointer; position: relative; }
-        .card.playable { border-color: var(--success); box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
-        .card-corner { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 700; }
-        .card-center { font-size: 1.8rem; text-align: center; }
-        .suit-circle { color: #00f0ff; } .suit-triangle { color: #ff007f; } .suit-cross { color: #ffb703; } .suit-square { color: #00ff66; } .suit-star { color: #a064ff; } .suit-whot { color: #ffffff; }
+        .header-controls { display: flex; gap: 10px; align-items: center; }
+        .status-badge { font-size: 0.85rem; color: var(--warning); font-weight: 700; background: rgba(255, 183, 3, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--warning); }
+        .about-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
+        
+        .timer-bar-container { width: 100%; max-width: 800px; background: rgba(255,255,255,0.05); height: 6px; border-radius: 3px; overflow: hidden; margin-top: 8px; }
+        .timer-bar { height: 100%; background: var(--primary); width: 100%; transition: width 1s linear, background-color 0.3s ease; }
+
+        .game-arena { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 12px; align-items: center; margin: 8px 0; }
+        .bot-area, .player-area { width: 100%; background: var(--surface); padding: 12px; border-radius: 12px; border: 1px solid rgba(0, 240, 255, 0.2); display: flex; flex-direction: column; gap: 8px; }
+        
+        /* AUTHENTIC WHOT CARD STYLES */
+        .card {
+            width: 80px;
+            height: 120px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 6px;
+            cursor: pointer;
+            position: relative;
+            color: var(--whot-red);
+            border: 1px solid #dcdcdc;
+            flex-shrink: 0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .card.playable {
+            box-shadow: 0 0 12px #00ff66, 0 3px 8px rgba(0, 0, 0, 0.4);
+            border: 2px solid #00ff66;
+            transform: translateY(-4px);
+        }
+
+        .card-corner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .card-corner.bottom {
+            transform: rotate(180deg);
+        }
+
+        .corner-symbol {
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .card-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+
+        /* SVG Shape Styles matching Physical Card */
+        .shape-svg { fill: var(--whot-red); width: 36px; height: 36px; }
+        .shape-svg-small { fill: var(--whot-red); width: 12px; height: 12px; }
+
+        .whot-text-logo {
+            font-family: 'serif';
+            font-style: italic;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .card-back {
+            width: 50px;
+            height: 75px;
+            background: var(--whot-red);
+            border: 2px solid #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-family: serif;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .field { display: flex; gap: 35px; align-items: center; justify-content: center; width: 100%; padding: 8px 0; }
+        
+        .deck-btn {
+            width: 80px;
+            height: 120px;
+            background: var(--whot-red);
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-family: serif;
+            font-style: italic;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
         .log-box { width: 100%; max-width: 800px; background: rgba(18, 24, 41, 0.8); border-radius: 8px; padding: 8px 12px; font-size: 0.9rem; color: var(--text-muted); text-align: center; }
-        .player-hand { display: flex; gap: 10px; overflow-x: auto; padding: 5px; }
+        .player-hand { display: flex; gap: 8px; overflow-x: auto; padding: 8px 4px; width: 100%; }
+
         .modal, .game-over-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.9); display: none; align-items: center; justify-content: center; z-index: 100; flex-direction: column; }
         .modal-content { background: var(--surface); border: 2px solid var(--primary); border-radius: 16px; padding: 25px; text-align: center; width: 90%; max-width: 350px; }
         .suit-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .suit-select-btn { background: var(--surface-card); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: #fff; cursor: pointer; font-size: 1rem; }
+        .suit-select-btn { background: var(--card-bg); color: var(--whot-red); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .restart-btn { margin-top: 15px; background: var(--primary); color: #000; font-family: 'Orbitron', sans-serif; font-weight: 800; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
     <header>
-        <div class="brand">XYZTECH // WHOT</div>
-        <div class="status-badge" id="turn-badge">YOUR TURN</div>
+        <div class="brand">XYZTECH // WHOT!</div>
+        <div class="header-controls">
+            <button class="about-btn" onclick="document.getElementById('about-modal').style.display='flex'">ABOUT</button>
+            <div class="status-badge" id="turn-badge">YOUR TURN (15s)</div>
+        </div>
     </header>
+
+    <div class="timer-bar-container">
+        <div class="timer-bar" id="timer-bar"></div>
+    </div>
 
     <div class="game-arena">
         <div class="bot-area">
@@ -67,19 +181,19 @@
 
         <div class="field">
             <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                <span style="font-size:0.8rem; color:var(--text-muted);">DECK</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);">MARKET</span>
                 <div class="deck-btn" onclick="playerDrawCard()">
-                    <div>🎴</div>
-                    <div id="deck-count" style="font-size:0.8rem;">30</div>
+                    <div style="font-size:1.1rem;">Whot!</div>
+                    <div id="deck-count" style="font-size:0.85rem; margin-top:4px; font-family:'Orbitron';">30</div>
                 </div>
             </div>
             <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                <span style="font-size:0.8rem; color:var(--text-muted);">TOP CARD</span>
+                <span style="font-size:0.8rem; color:var(--text-muted);">PLAYED CARD</span>
                 <div id="top-card-display"></div>
             </div>
         </div>
 
-        <div class="log-box" id="log-text">Match top card by suit or number!</div>
+        <div class="log-box" id="log-text">Match top card by suit shape or number!</div>
     </div>
 
     <div class="player-area">
@@ -87,37 +201,67 @@
         <div class="player-hand" id="player-hand"></div>
     </div>
 
+    <!-- WHOT CALL MODAL -->
     <div class="modal" id="whot-modal">
         <div class="modal-content">
-            <h3 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:10px;">DECLARE SUIT</h3>
+            <h3 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:10px;">CALL A SUIT</h3>
             <div class="suit-grid">
-                <button class="suit-select-btn" onclick="selectWhotSuit('Circle')">⭕ Circle</button>
+                <button class="suit-select-btn" onclick="selectWhotSuit('Circle')">🔴 Circle</button>
                 <button class="suit-select-btn" onclick="selectWhotSuit('Triangle')">🔺 Triangle</button>
-                <button class="suit-select-btn" onclick="selectWhotSuit('Cross')">✖️ Cross</button>
+                <button class="suit-select-btn" onclick="selectWhotSuit('Cross')">➕ Cross</button>
                 <button class="suit-select-btn" onclick="selectWhotSuit('Square')">⬛ Square</button>
-                <button class="suit-select-btn" onclick="selectWhotSuit('Star')">⭐️ Star</button>
+                <button class="suit-select-btn" onclick="selectWhotSuit('Star')">⭐ Star</button>
             </div>
         </div>
     </div>
 
-    <div class="game-over-modal" id="game-over-modal">
-        <h2 id="game-over-title" style="font-family:'Orbitron'; font-size:2rem; margin-bottom:10px;">VICTORY</h2>
-        <p id="game-over-msg" style="color:var(--text-muted);">Game Over</p>
-        <button class="restart-btn" onclick="initGame()">PLAY AGAIN</button>
+    <!-- ABOUT MODAL -->
+    <div class="modal" id="about-modal" onclick="this.style.display='none'">
+        <div class="modal-content" onclick="event.stopPropagation()" style="text-align:left; max-width:320px;">
+            <h3 style="font-family:'Orbitron'; color:var(--primary); margin-bottom:8px; font-size:1rem;">ABOUT GAME</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.4; margin-bottom:10px;">
+                Whot! Cyber Arcade is a neon-styled Nigerian Whot card game vs a smart bot. Features full action cards (1,2,5,8,14,20), reshuffling deck, and zero-download browser play.
+            </p>
+            <p style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-bottom:12px;">
+                Dev: XyzTech
+            </p>
+            <button class="restart-btn" onclick="document.getElementById('about-modal').style.display='none'" style="width:100%; margin-top:0; padding:8px;">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- GAME OVER MODAL -->
+    <div class="modal" id="game-over-modal">
+        <div class="modal-content">
+            <h2 id="game-over-title" style="font-family:'Orbitron'; font-size:2rem; margin-bottom:10px;">VICTORY</h2>
+            <p id="game-over-msg" style="color:var(--text-muted);">Game Over</p>
+            <button class="restart-btn" onclick="initGame()">PLAY AGAIN</button>
+        </div>
     </div>
 
     <script>
-        const SUITS = {
-            Circle: { symbol: '⭕', css: 'suit-circle' },
-            Triangle: { symbol: '🔺', css: 'suit-triangle' },
-            Cross: { symbol: '✖️', css: 'suit-cross' },
-            Square: { symbol: '⬛', css: 'suit-square' },
-            Star: { symbol: '⭐️', css: 'suit-star' },
-            Whot: { symbol: '🃏', css: 'suit-whot' }
+        // SVG Vector Icons for Physical Card Look
+        const SVG_SHAPES = {
+            Circle: `<svg class="shape-svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/></svg>`,
+            Triangle: `<svg class="shape-svg" viewBox="0 0 100 100"><polygon points="50,5 95,90 5,90"/></svg>`,
+            Cross: `<svg class="shape-svg" viewBox="0 0 100 100"><path d="M35 5 h30 v30 h30 v30 h-30 v30 h-30 v-30 h-30 v-30 h30 z"/></svg>`,
+            Square: `<svg class="shape-svg" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80"/></svg>`,
+            Star: `<svg class="shape-svg" viewBox="0 0 100 100"><polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36"/></svg>`,
+            Whot: `<div class="whot-text-logo">Whot!</div>`
         };
 
+        const SVG_SHAPES_SMALL = {
+            Circle: `<svg class="shape-svg-small" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/></svg>`,
+            Triangle: `<svg class="shape-svg-small" viewBox="0 0 100 100"><polygon points="50,5 95,90 5,90"/></svg>`,
+            Cross: `<svg class="shape-svg-small" viewBox="0 0 100 100"><path d="M35 5 h30 v30 h30 v30 h-30 v30 h-30 v-30 h-30 v-30 h30 z"/></svg>`,
+            Square: `<svg class="shape-svg-small" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80"/></svg>`,
+            Star: `<svg class="shape-svg-small" viewBox="0 0 100 100"><polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36"/></svg>`,
+            Whot: `<span style="font-size:0.6rem; font-style:italic;">w</span>`
+        };
+
+        const TURN_TIME_LIMIT = 15;
         let deck = [], discardPile = [], playerHand = [], botHand = [], topCard = null;
         let isPlayerTurn = true, activeSuit = null, pendingWhotIndex = null;
+        let turnTimer = null, timeLeft = TURN_TIME_LIMIT;
 
         function createDeck() {
             let d = [];
@@ -131,35 +275,85 @@
             deck = createDeck(); discardPile = []; playerHand = []; botHand = []; activeSuit = null; isPlayerTurn = true;
             document.getElementById('game-over-modal').style.display = 'none';
             for (let i = 0; i < 6; i++) { playerHand.push(deck.pop()); botHand.push(deck.pop()); }
-            do { topCard = deck.pop(); } while (topCard.suit === 'Whot');
+            do { topCard = deck.pop(); } while (topCard.suit === 'Whot' || [1,2,5,8,14].includes(topCard.number));
             updateUI();
-            log("Game started!");
+            log("Match cards by shape or number!");
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(turnTimer);
+            timeLeft = TURN_TIME_LIMIT;
+            updateTimerUI();
+
+            turnTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(turnTimer);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            let bar = document.getElementById('timer-bar');
+            let pct = (timeLeft / TURN_TIME_LIMIT) * 100;
+            bar.style.width = pct + "%";
+            bar.style.backgroundColor = timeLeft <= 5 ? "var(--accent)" : "var(--primary)";
+            document.getElementById('turn-badge').innerText = `${isPlayerTurn ? "YOUR TURN" : "BOT'S TURN"} (${timeLeft}s)`;
+        }
+
+        function handleTimeout() {
+            if (isPlayerTurn) {
+                log("Time expired! Card auto-drawn.");
+                playerDrawCard(true);
+            } else {
+                log("Bot turn timed out!");
+                botDrawCard(true);
+            }
+        }
+
+        function renderCardHTML(card, playable = false) {
+            let iconSmall = SVG_SHAPES_SMALL[card.suit];
+            let iconCenter = SVG_SHAPES[card.suit];
+            let numText = card.suit === 'Whot' ? '20' : card.number;
+
+            return `
+                <div class="card ${playable ? 'playable' : ''}">
+                    <div class="card-corner top">
+                        <div>${numText}</div>
+                        <div class="corner-symbol">${iconSmall}</div>
+                    </div>
+                    <div class="card-center">${iconCenter}</div>
+                    <div class="card-corner bottom">
+                        <div>${numText}</div>
+                        <div class="corner-symbol">${iconSmall}</div>
+                    </div>
+                </div>
+            `;
         }
 
         function updateUI() {
             document.getElementById('deck-count').innerText = deck.length;
             document.getElementById('bot-count').innerText = `(${botHand.length})`;
-            document.getElementById('turn-badge').innerText = isPlayerTurn ? "YOUR TURN" : "BOT'S TURN";
 
             let topD = document.getElementById('top-card-display');
-            let info = SUITS[topCard.suit];
-            topD.innerHTML = `<div class="card"><div class="card-corner ${info.css}">${topCard.number}</div><div class="card-center ${info.css}">${info.symbol}</div><div class="card-corner ${info.css}" style="text-align:right;">${topCard.number}</div></div>`;
-            if (activeSuit) topD.innerHTML += `<div style="font-size:0.75rem; color:var(--primary); text-align:center; margin-top:3px;">Call: ${activeSuit}</div>`;
+            topD.innerHTML = renderCardHTML(topCard);
+            if (activeSuit) topD.innerHTML += `<div style="font-size:0.75rem; color:var(--primary); text-align:center; margin-top:3px; font-weight:bold;">Call: ${activeSuit}</div>`;
 
             let botD = document.getElementById('bot-hand-display');
             botD.innerHTML = '';
-            for (let i = 0; i < botHand.length; i++) botD.innerHTML += `<div class="card-back">W</div>`;
+            for (let i = 0; i < botHand.length; i++) botD.innerHTML += `<div class="card-back">Whot!</div>`;
 
             let playerD = document.getElementById('player-hand');
             playerD.innerHTML = '';
             playerHand.forEach((c, idx) => {
                 let playable = c.suit === 'Whot' || (activeSuit ? c.suit === activeSuit : (c.suit === topCard.suit || c.number === topCard.number));
-                let sInfo = SUITS[c.suit];
-                let cardEl = document.createElement('div');
-                cardEl.className = `card ${playable ? 'playable' : ''}`;
-                cardEl.innerHTML = `<div class="card-corner ${sInfo.css}">${c.number}</div><div class="card-center ${sInfo.css}">${sInfo.symbol}</div><div class="card-corner ${sInfo.css}" style="text-align:right;">${c.number}</div>`;
-                cardEl.onclick = () => playCard(idx);
-                playerD.appendChild(cardEl);
+                let cardWrap = document.createElement('div');
+                cardWrap.innerHTML = renderCardHTML(c, playable);
+                cardWrap.firstElementChild.onclick = () => playCard(idx);
+                playerD.appendChild(cardWrap.firstElementChild);
             });
         }
 
@@ -169,7 +363,7 @@
             if (!isPlayerTurn) return;
             let c = playerHand[idx];
             let playable = c.suit === 'Whot' || (activeSuit ? c.suit === activeSuit : (c.suit === topCard.suit || c.number === topCard.number));
-            if (!playable) { log("Invalid card!"); return; }
+            if (!playable) { log("Invalid card play!"); return; }
 
             if (c.suit === 'Whot') {
                 pendingWhotIndex = idx;
@@ -186,6 +380,7 @@
         }
 
         function executeMove(idx, hand, agent, isWhot = false) {
+            clearInterval(turnTimer);
             let c = hand.splice(idx, 1)[0];
             discardPile.push(topCard);
             topCard = c;
@@ -196,21 +391,68 @@
             if (playerHand.length === 0) return gameOver(true);
             if (botHand.length === 0) return gameOver(false);
 
-            isPlayerTurn = !isPlayerTurn;
+            // Real Whot Action Rules
+            let repeatTurn = false;
+            let targetHand = agent === "Player" ? botHand : playerHand;
+            let targetName = agent === "Player" ? "Bot" : "Player";
+
+            if (c.number === 1) {
+                log(`${agent} played Hold On (1)! Go again.`);
+                repeatTurn = true;
+            } else if (c.number === 2) {
+                log(`${agent} played Pick 2! ${targetName} draws 2 cards.`);
+                drawMultipleCards(targetHand, 2);
+                repeatTurn = true;
+            } else if (c.number === 5) {
+                log(`${agent} played Pick 3! ${targetName} draws 3 cards.`);
+                drawMultipleCards(targetHand, 3);
+                repeatTurn = true;
+            } else if (c.number === 8) {
+                log(`${agent} played Suspension (8)! ${targetName}'s turn skipped.`);
+                repeatTurn = true;
+            } else if (c.number === 14) {
+                log(`${agent} called General Market (14)! ${targetName} draws 1 card.`);
+                drawMultipleCards(targetHand, 1);
+                repeatTurn = true;
+            }
+
+            if (!repeatTurn) {
+                isPlayerTurn = !isPlayerTurn;
+            }
+
             updateUI();
+            startTimer();
+
             if (!isPlayerTurn) setTimeout(botTurn, 1000);
         }
 
-        function playerDrawCard() {
-            if (!isPlayerTurn) return;
+        function drawMultipleCards(hand, count) {
+            for (let i = 0; i < count; i++) {
+                if (deck.length === 0) refillDeck();
+                if (deck.length > 0) hand.push(deck.pop());
+            }
+        }
+
+        function playerDrawCard(isTimeout = false) {
+            if (!isPlayerTurn && !isTimeout) return;
             if (deck.length === 0) refillDeck();
             if (deck.length > 0) {
                 playerHand.push(deck.pop());
-                log("You drew a card.");
+                if (!isTimeout) log("You drew a card from Market.");
                 isPlayerTurn = false;
                 updateUI();
+                startTimer();
                 setTimeout(botTurn, 1000);
             }
+        }
+
+        function botDrawCard(isTimeout = false) {
+            if (deck.length === 0) refillDeck();
+            if (deck.length > 0) botHand.push(deck.pop());
+            if (!isTimeout) log("Bot drew a card.");
+            isPlayerTurn = true;
+            updateUI();
+            startTimer();
         }
 
         function botTurn() {
@@ -220,17 +462,15 @@
             if (validIdx !== -1) {
                 let c = botHand[validIdx];
                 if (c.suit === 'Whot') {
-                    activeSuit = 'Circle';
+                    let counts = { Circle: 0, Triangle: 0, Cross: 0, Square: 0, Star: 0 };
+                    botHand.forEach(card => { if (counts[card.suit] !== undefined) counts[card.suit]++; });
+                    activeSuit = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
                     executeMove(validIdx, botHand, "Bot", true);
                 } else {
                     executeMove(validIdx, botHand, "Bot");
                 }
             } else {
-                if (deck.length === 0) refillDeck();
-                if (deck.length > 0) botHand.push(deck.pop());
-                log("Bot drew a card.");
-                isPlayerTurn = true;
-                updateUI();
+                botDrawCard();
             }
         }
 
@@ -238,17 +478,16 @@
             if (discardPile.length > 0) {
                 deck = discardPile.sort(() => Math.random() - 0.5);
                 discardPile = [];
-                log("Reshuffled deck!");
-            } else {
-                deck = [{ suit: 'Circle', number: 1 }, { suit: 'Triangle', number: 2 }, { suit: 'Whot', number: 20 }];
+                log("Reshuffled market deck!");
             }
         }
 
         function gameOver(won) {
+            clearInterval(turnTimer);
             let m = document.getElementById('game-over-modal');
             let t = document.getElementById('game-over-title');
             t.innerText = won ? "VICTORY!" : "DEFEAT";
-            t.className = won ? "win" : "lose";
+            t.style.color = won ? "var(--primary)" : "var(--accent)";
             m.style.display = 'flex';
         }
 
